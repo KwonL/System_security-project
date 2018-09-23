@@ -31,26 +31,40 @@ namespace {
       // TODO: implement simple dataflow analysis to see if the computed data is
       // flowing into malloc().
       auto* op = dyn_cast<BinaryOperator>(I); 
+      auto* ovf_inst = I;
       Instruction* cur_node = op;
 
       // Get next instructino until meet ret
       // if there is malloc function, should check
-      while (strcmp(cur_node->getNextNode()->getOpcodeName(), "ret")) {        
+      while (strcmp(cur_node->getNextNode()->getOpcodeName(), "ret")) {
         // if there is some function call
         if (isa<CallInst>(cur_node)) {
           std::string name = cast<CallInst>(cur_node)->getCalledFunction()->getName().str();
 
-          // if function's name is malloc and using vulnerable variable..
-          errs() << "function name : " << name << ", param : " << *cur_node->getOperand(0) << ", and I is.. : " << *I << "\n";
-          errs() << "instruction : " << *cur_node << "\n";
-          if (!name.compare("malloc") && (cur_node->getOperand(0) == I)) 
-            errs() << "function name : " << name << ", params : " << *cur_node->getOperand(0) << "\n";
+          // if function's name is malloc and using vulnerable variable, return ture
+          if ((!name.compare("malloc")) && (cur_node->getOperand(0) == ovf_inst)) {
+            // errs() << "Detected!\n";
+            return true;
+          }
+        }
+
+        // if cur_node using vulnerable variable, then change variable to now instruction
+        for (int i = 0; i < cur_node->getNumOperands(); i++) {
+          Value* opnd = cur_node->getOperand(i);
+          if (opnd == ovf_inst) {
+            // Store instruction save vulnerable var to second operand
+            if (!strcmp(cur_node->getOpcodeName(), "store")) 
+              ovf_inst = cur_node->getOperand(1);
+            else 
+              ovf_inst = cur_node;
+            // errs() << "Vulnerable variable carried!, And now instruction is : " << *ovf_inst << "\n";
+          }
         }
 
         cur_node = cur_node->getNextNode();
       }
 
-      return true;
+      return false;
     }
 
     Value* getLineNum(Instruction *I) {
@@ -65,7 +79,7 @@ namespace {
       bool res = false;
 
       for (auto &B : F) {
-        errs() << "block : " << B << "\n";
+        // errs() << "block : " << B << "\n";
         for (auto &I : B) {
           if (auto *op = dyn_cast<BinaryOperator>(&I)) {
             // TODO: Implement the shouldCheckOverflow() function.
