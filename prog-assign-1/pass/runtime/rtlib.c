@@ -1,10 +1,17 @@
 #include <stdio.h>
 #include <limits.h>
 
-// TODO: Change function prototype if necessary.
-void logop(int res, int linenum) {
-  printf("[LOG] Computed %x at line %d\n", res, linenum);
+int check_overflow() {
+  return 0;
+}
 
-  // TODO: Produce warning if the integer overflow is found.
+// TODO: Change function prototype if necessary.
+void logop(int res, int linenum, int arg1, int arg2, char* opcode) {
+  printf("[LOG] Computed %d at line %d\n", res, linenum);
+
+  // TODO: Produce warning if the integer overflow is found
+  if (1) {
+    return;
+  }
 }
 

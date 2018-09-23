@@ -92,7 +92,7 @@ namespace {
             // TODO: Pass more information including operands of computations.
             IRBuilder<> builder(op);
             builder.SetInsertPoint(&B, ++builder.GetInsertPoint());
-            Value* args[] = {op, getLineNum(&I)};
+            Value* args[] = {op, getLineNum(&I), op->getOperand(0), op->getOperand(1)};
             builder.CreateCall(logFunc, args);
             res |= true;
           }
