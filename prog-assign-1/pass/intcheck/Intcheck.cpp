@@ -30,6 +30,17 @@ namespace {
     bool shouldCheckOverflow(Value *I, int depth) {
       // TODO: implement simple dataflow analysis to see if the computed data is
       // flowing into malloc().
+      auto* op = dyn_cast<BinaryOperator>(I); 
+      Instruction* cur_node = op;
+
+      // Get next instructino until meet ret
+      // if there is malloc function, should check
+      while (strcmp(cur_node->getNextNode()->getOpcodeName(), "ret")) {
+        errs() << "move cursor : " << *cur_node << "\n";
+
+        cur_node = cur_node->getNextNode();
+      }
+
       return true;
     }
 
