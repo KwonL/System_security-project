@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <limits.h>
 
-int check_overflow() {
-  return 0;
+int isOvf(int a, int b) {
+
+  int res = 0;
+  res = a > INT_MAX / b;
+
+  return res;
 }
 
 // TODO: Change function prototype if necessary.
-void logop(int res, int linenum, int arg1, int arg2, char* opcode) {
-  printf("[LOG] Computed %d at line %d\n", res, linenum);
-
+void logop(int res, int linenum, int arg1,  int arg2) {
   // TODO: Produce warning if the integer overflow is found
-  if (1) {
-    return;
-  }
+  // printf("[WARNING] Integer overflow detected at line %d\n", linenum);
+  if (isOvf(arg1, arg2)) 
+    printf("[WARNING] Integer overflow detected at line %d\n", linenum);
 }
-
