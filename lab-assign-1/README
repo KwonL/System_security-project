@@ -1,3 +1,5 @@
-Simple buffer overflow problem. Input string's buffer size is 0x3a, so I can exploit by modify return address of stack. 
-ebp is sotred before return address, so payload size should be 0x3e. 
-win function's address is 0x08048665. x86 use little endian, so return address part is "\x65\x86\x04\x08"
+Input string's buffer size is 0x3a, old ebp is sotred before return address, so payload size should be 0x3e. 
+win function's address is 0x08048665. x86 use little endian, so return address part is "\x65\x86\x04\x08".
+
+run exploit :
+./exploit.py | ./target
