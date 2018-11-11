@@ -1,0 +1,6 @@
+Using heap overflow, we can modify second chunk(allocated memory after fisrt melloc).
+Modify second chunk as freed and small, then free() will coalesce first chunk with second one.
+Using double free bug at this time, we can overwrite "jacket!" 's address at "write_here", and get flag
+
+execution :
+    ./exploit.py | ./target
